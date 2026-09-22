@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alex Tolstyakov · set sail</title>
+<meta name="description" content="Alexander Tolstyakov: founder of Karteto, working across product and growth. A CV you explore by sailing a yacht between archipelagos.">
+
+<link rel="canonical" href="https://alex-tols.com/">
+<meta name="theme-color" content="#1b86b8">
+
+<!-- link preview card: LinkedIn, WhatsApp, Slack, iMessage -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Alexander Tolstyakov">
+<meta property="og:title" content="Alexander Tolstyakov — a CV you sail">
+<meta property="og:description" content="Founder of Karteto, working across product and growth. Steer a yacht between islands to find my work, education, the places I've lived and the things I like.">
+<meta property="og:url" content="https://alex-tols.com/">
+<meta property="og:image" content="https://alex-tols.com/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A low-poly sailing yacht off a lighthouse island, with Alexander Tolstyakov on the name board.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Alexander Tolstyakov — a CV you sail">
+<meta name="twitter:description" content="Founder of Karteto. Steer a yacht between islands to explore my CV.">
+<meta name="twitter:image" content="https://alex-tols.com/assets/og.jpg">
+
+<!-- ANALYTICS: uncomment ONE of these after signing up. Both are cookieless, so no consent
+     banner is needed. Events (dock / store_click / contact_click / engaged) are already wired up. -->
+<!-- <script defer data-domain="alex-tols.com" src="https://plausible.io/js/script.tagged-events.js"></script> -->
+<!-- <script defer src="https://cloud.umami.is/script.js" data-website-id="PASTE-YOUR-ID"></script> -->
+
+<link rel="icon" href="favicon.svg?v=15" type="image/svg+xml">
+<link rel="icon" href="favicon-96.png?v=15" sizes="96x96" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=15">
+<style>
+  :root {
+    --ink: #10263a;
+    --paper: #fbf6ea;
+    --coral: #e4572e;
+    --gold: #f2b84b;
+    --teal: #2aa79b;
+    --glass: rgba(16, 38, 58, .72);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #cfe9f5; color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  canvas#sea { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+  canvas#sea:active { cursor: grabbing; }
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; margin: 0; }
+  button { font: inherit; cursor: pointer; }
+  kbd { background: var(--ink); color: #fff; border-radius: 6px; padding: 2px 8px; font: 600 12px ui-monospace, Consolas, monospace; white-space: nowrap; }
+
+  /* ---------- HUD ---------- */
+  #hud { position: fixed; top: 16px; left: 16px; display: flex; gap: 12px; align-items: flex-start; pointer-events: none; user-select: none; }
+  #compass { width: 96px; height: 96px; border-radius: 50%; background: var(--glass); border: 2px solid rgba(255,255,255,.55);
+    position: relative; backdrop-filter: blur(6px); flex: none; }
+  #rose { position: absolute; inset: 0; border-radius: 50%; }
+  #rose span { position: absolute; left: 50%; top: 50%; color: #fff; font-size: 11px; font-weight: 700; transform-origin: 0 0; }
+  #rose .n { color: var(--coral); }
+  #windArrow { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+  #windArrow::before { content: ""; position: absolute; left: -1.5px; top: -24px; width: 3px; height: 34px; background: #9fe3ff; border-radius: 2px; }
+  #windArrow::after { content: ""; position: absolute; left: -6px; top: -32px; border: 6px solid transparent; border-bottom: 10px solid #9fe3ff; }
+  .dot { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+  .dot::before { content: ""; position: absolute; left: -5px; top: -47px; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--gold); border: 2px solid #fff; }
+  .dot.found::before { background: var(--teal); }
+  .dot.arch::before { background: var(--c); width: 13px; height: 13px; left: -6.5px; top: -49px; border-radius: 4px; }
+  .dot.arch.found::before { background: var(--c); opacity: .45; }
+  #boatMark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -60%);
+    border: 7px solid transparent; border-bottom: 16px solid #fff; border-top: 0; }
+  #readout { background: var(--glass); color: #fff; border-radius: 12px; padding: 10px 14px; backdrop-filter: blur(6px); min-width: 150px; }
+  #speed { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  #speed small { font-size: 12px; font-weight: 500; opacity: .8; }
+  #pos { font-size: 12px; opacity: .9; margin-top: 2px; }
+  #trimBar { height: 4px; background: rgba(255,255,255,.25); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  #trimBar i { display: block; height: 100%; width: 50%; background: #9fe3ff; }
+  #log { font-size: 12px; margin-top: 8px; opacity: .95; }
+
+  #chip { position: fixed; top: 124px; left: 16px; background: var(--ink); color: #fff; border: 2px solid var(--gold); border-radius: 999px;
+    padding: 7px 14px; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; opacity: 0; transform: translateY(-6px);
+    transition: .25s; pointer-events: none; max-width: calc(100vw - 32px); }
+  #chip.show { opacity: 1; transform: none; }
+
+  #hints { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); background: var(--glass); color: #fff; border-radius: 999px; padding: 9px 18px; font-size: 13px;
+    backdrop-filter: blur(6px); pointer-events: none; transition: opacity 1.2s; white-space: nowrap; }
+  #hints.gone { opacity: 0; }
+  #hints kbd { background: #fff; color: var(--ink); margin-right: 3px; }
+  #serveBtn { position: fixed; right: 24px; bottom: 120px; width: 84px; height: 84px; border-radius: 50%; border: 3px solid #fff; background: var(--coral); color: #fff; font-weight: 800; display: none; z-index: 3; }
+  #serveBtn.show { display: block; }
+  #panelBody pre, #plain pre { background: var(--ink); color: #7ee787; border-radius: 10px; padding: 10px 14px; margin: 18px 0 8px; overflow-x: auto; font: 600 13px ui-monospace, Consolas, monospace; }
+  figure { margin: 14px 0; }
+  figure img, figure video { display: block; width: 100%; max-height: 440px; object-fit: cover; object-position: 50% 22%; border-radius: 14px; background: #ddd6c4; }
+  figcaption { font-size: 12.5px; color: #5b6b78; margin-top: 6px; }
+  .photos { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; margin: 14px -4px; scroll-snap-type: x mandatory; }
+  .photos figure { flex: none; width: 240px; margin: 0; scroll-snap-align: start; }
+  .photos img, .photos video { height: 300px; max-height: none; }
+  #plain .photos figure { width: 300px; } #plain .photos img, #plain .photos video { height: 360px; } #plain figure img { max-height: 520px; }
+  ul.books li { margin-bottom: 10px; }
+  .addr { font-family: ui-monospace, Consolas, monospace; background: #efe7d3; border-radius: 6px; padding: 2px 7px; white-space: nowrap; }
+  .shots { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 12px; margin: 14px -4px; scroll-snap-type: x mandatory; }
+  .shots img { height: 300px; width: auto; border-radius: 16px; border: 3px solid var(--ink); flex: none; scroll-snap-align: start; background: #fdf8d8; }
+
+  #topRight { position: fixed; top: 16px; right: 16px; display: flex; gap: 8px; }
+  #topRight button { background: var(--glass); color: #fff; border: 0; border-radius: 999px; padding: 9px 16px; font-size: 13px; backdrop-filter: blur(6px); }
+  #topRight button:hover { background: var(--ink); }
+
+  /* ---------- overlays ---------- */
+  .primary { background: var(--coral); color: #fff; border: 0; border-radius: 999px; padding: 12px 24px; font-weight: 700; font-size: 15px; }
+  .primary:hover { filter: brightness(1.08); }
+
+  #prompt { position: fixed; left: 50%; bottom: 12%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+    transition: .25s; background: var(--ink); color: #fff; border: 2px solid var(--gold); border-radius: 999px; padding: 12px 22px; font-size: 15px; }
+  #prompt.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  #prompt kbd { background: var(--gold); color: var(--ink); margin: 0 4px; }
+
+  #toast { position: fixed; left: 50%; top: 18%; transform: translateX(-50%); background: var(--glass); color: #fff; padding: 10px 18px;
+    border-radius: 999px; font-size: 14px; opacity: 0; transition: opacity .3s; pointer-events: none; backdrop-filter: blur(6px); text-align: center; max-width: calc(100vw - 32px); }
+  #toast.show { opacity: 1; }
+
+  #panel { position: fixed; top: 0; right: 0; height: 100%; width: min(460px, 100%); background: var(--paper); padding: 28px;
+    overflow-y: auto; transform: translateX(105%); transition: transform .4s cubic-bezier(.2,.8,.2,1), visibility 0s .4s; visibility: hidden; box-shadow: -10px 0 40px rgba(0,0,0,.25); z-index: 4; }
+  #panel.open { transform: none; visibility: visible; transition-delay: 0s; }
+  #panel h2 { font-size: 30px; margin-bottom: 4px; }
+  #panelKicker { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--coral); font-weight: 700; }
+  #panelBody { line-height: 1.6; margin: 14px 0 24px; }
+  #panelBody a, #plain a { color: var(--coral); }
+  #panelBody ul, #plain ul { padding-left: 20px; }
+  #panelBody li, #plain li { margin-bottom: 6px; }
+  a.store-btn { display: inline-block; margin: 0 6px 8px 0; background: var(--ink); color: #fff !important; text-decoration: none; border-radius: 12px; padding: 12px 20px; font-weight: 700; }
+  a.store-btn::before { content: "\2193\00a0\00a0"; }
+  a.store-btn:hover { background: var(--coral); }
+  .ghost { background: none; border: 2px solid var(--ink); color: var(--ink); border-radius: 999px; padding: 9px 18px; font-weight: 600; }
+  .ghost:hover { background: var(--ink); color: #fff; }
+
+  #map { position: fixed; inset: 0; display: none; place-items: center; background: rgba(16,38,58,.55); z-index: 6; padding: 16px; }
+  #map.show { display: grid; }
+  #mapCanvas { width: min(92vmin, 720px); height: min(92vmin, 720px); filter: drop-shadow(0 20px 40px rgba(0,0,0,.35)); }
+  #map small { position: fixed; bottom: 18px; left: 0; right: 0; text-align: center; color: #fff; }
+
+  #plain { position: fixed; inset: 0; background: var(--paper); overflow-y: auto; padding: 40px 16px; z-index: 10; display: none; }
+  #plain.show { display: block; }
+  #plain .wrap { max-width: 700px; margin: 0 auto; line-height: 1.6; }
+  #plain h1 { font-size: 40px; }
+  #plain h2.arch { font-size: 28px; margin-top: 48px; padding-left: 14px; border-left: 6px solid var(--coral); }
+  #plain h3 { font-size: 21px; }
+  #plain section { margin-top: 22px; border-top: 2px solid rgba(16,38,58,.12); padding-top: 16px; }
+
+  /* ---------- touch joystick ---------- */
+  #stick { position: fixed; left: 24px; bottom: 28px; width: 128px; height: 128px; border-radius: 50%; background: var(--glass);
+    border: 2px solid rgba(255,255,255,.5); display: none; touch-action: none; z-index: 3; }
+  #stick i { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px; border-radius: 50%; background: #fff; opacity: .9; }
+  @media (pointer: coarse) { #stick { display: block; } .desktop-only { display: none !important; } }
+  @media (pointer: fine) { .touch-only { display: none !important; } }
+  @media (max-width: 640px) {
+    #hints { bottom: 170px; white-space: normal; width: max-content; max-width: calc(100vw - 32px); font-size: 12px; text-align: center; }
+    #topRight { top: auto; bottom: 28px; flex-direction: column; align-items: flex-end; }
+    #prompt { bottom: 24%; }
+    #chip { top: 136px; }
+    #panel { top: auto; bottom: 0; height: 58%; width: 100%; border-radius: 18px 18px 0 0; transform: translateY(105%); }
+    #compass { width: 80px; height: 80px; }
+    .dot::before { top: -39px; } .dot.arch::before { top: -41px; }
+    #readout { min-width: 0; }
+  }
+</style>
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.js?r=160" } }
+</script>
+</head>
+<body>
+
+<canvas id="sea" aria-label="A 3D sea. Steer the yacht with W A S D to reach the islands."></canvas>
+
+<div id="hud" aria-hidden="true">
+  <div id="compass"><div id="rose">
+    <span class="n" style="transform:translate(-4px,-46px)">N</span>
+    <span style="transform:translate(34px,-7px)">E</span>
+    <span style="transform:translate(-3px,32px)">S</span>
+    <span style="transform:translate(-44px,-7px)">W</span>
+    <div id="windArrow"></div>
+  </div><div id="boatMark"></div></div>
+  <div id="readout">
+    <div id="speed">0.0 <small>kn</small></div>
+    <div id="pos">At anchor</div>
+    <div id="trimBar" title="Sail trim"><i></i></div>
+    <div id="log">Logbook</div>
+  </div>
+</div>
+
+<div id="chip" role="status"></div>
+<div id="hints"><span class="desktop-only"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> sail &nbsp;·&nbsp; <kbd>E</kbd> dock at a glowing ring &nbsp;·&nbsp; <kbd>M</kbd> chart &nbsp;·&nbsp; drag to look around</span><span class="touch-only">Joystick to sail · sail into a glowing ring to dock</span></div>
+<button id="serveBtn">Serve</button>
+<div id="topRight">
+  <button id="soundBtn" aria-label="Toggle sound">Sound on</button>
+  <button id="mapBtn">Chart <span class="desktop-only">(M)</span></button>
+  <button id="skip">Skip the sailing →</button>
+</div>
+<button id="prompt"></button>
+<div id="toast" role="status"></div>
+<div id="stick" class="touch-only"><i></i></div>
+
+<aside id="panel" aria-live="polite">
+  <div id="panelKicker">Docked at</div>
+  <h2 id="panelTitle"></h2>
+  <div id="panelBody"></div>
+  <button class="ghost" id="castOff">Cast off <span class="desktop-only">(Esc)</span></button>
+</aside>
+
+<div id="map"><canvas id="mapCanvas" width="720" height="720"></canvas><small>Click anywhere or press M to close</small></div>
+
+<div id="plain"><div class="wrap">
+  <button class="ghost" id="backToSea">← Back to the sea</button>
+  <h1 id="plainName" style="margin-top:24px"></h1>
+  <p id="plainTag"></p>
+  <div id="plainSections"></div>
+</div></div>
+
+<noscript><div style="position:fixed;inset:0;background:#fbf6ea;padding:40px;z-index:99">Alexander Tolstyakov, founder of Karteto. This site is a small sailing game and needs JavaScript. Find me on <a href="https://www.linkedin.com/in/alex-tols">LinkedIn</a>.</div></noscript>
+
+<script type="module" src="./main.js?v=15"></script>
+</body>
+</html>

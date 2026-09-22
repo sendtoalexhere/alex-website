@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sailboat">
+  <rect width="64" height="64" rx="14" fill="#1b86b8"/>
+  <rect x="33.5" y="8" width="2.5" height="37" fill="#10263a"/>
+  <path d="M36 9 L47 12.5 L36 16 Z" fill="#e4572e"/>
+  <path d="M32 14 L32 43 L14 43 Z" fill="#faf3e3"/>
+  <path d="M37.5 19 L37.5 43 L51 43 Z" fill="#e6dfcd"/>
+  <path d="M7 45 L57 45 L48.5 57 L15.5 57 Z" fill="#10263a"/>
+</svg>

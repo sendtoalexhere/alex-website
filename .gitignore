@@ -1,0 +1,9 @@
+# local working doc, not part of the site
+*.docx
+~$*
+# local tooling config
+.claude/
+# OS noise
+Thumbs.db
+desktop.ini
+.DS_Store
