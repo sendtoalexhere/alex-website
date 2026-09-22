@@ -35,7 +35,7 @@ export const ARCHIPELAGOS = [
       html: `
         <p><strong>Alexander Tolstyakov</strong>. Founder of Karteto, working across product and growth. Based in Dubai.</p>
         <p>I took a consumer subscription app, <strong>Karteto</strong>, from an idea to 200K+ downloads, 5K+ paying subscribers and $300K+ in annual recurring revenue, owning product, growth and the P&amp;L end to end. Before that I led partnerships at C-level in fintech, after commercial and financial analytics roles at Exante, Coca-Cola HBC and Nissan.</p>
-        <p>I like combining hands-on product and performance-marketing work with a finance-grade grip on unit economics. I'm now looking to bring a founder's ownership to building and scaling products inside a larger organisation.</p>
+        <p>I like combining hands-on product and performance-marketing work with a finance-grade grip on unit economics.</p>
         <p>Write to me at <strong class="addr">sendtoalexhere (at) gmail.com</strong> · <a href="https://www.linkedin.com/in/alex-tols" target="_blank" rel="noopener">LinkedIn</a></p>
         <p><em>Four archipelagos to explore: Work is straight downwind. Follow a line of coloured buoys, or press <kbd>M</kbd> for the chart. The little island next door explains how to make use of me.</em></p>`,
     }, {

@@ -1,9 +1,9 @@
 /* The engine: sea, yacht, islands, games, HUD. Text lives in content.js, island decorations in landmarks.js. */
 import * as THREE from 'three';
-import { SITE, ARCHIPELAGOS, CARDS } from './content.js?v=17';
-import { audio } from './audio.js?v=17';
-import { track, trackDwell } from './analytics.js?v=17';
-import { LANDMARKS, PLANTS, mat, put, labelSprite, cardTex, cardMesh, chessPiece, hullGeometry } from './landmarks.js?v=17';
+import { SITE, ARCHIPELAGOS, CARDS } from './content.js?v=18';
+import { audio } from './audio.js?v=18';
+import { track, trackDwell } from './analytics.js?v=18';
+import { LANDMARKS, PLANTS, mat, put, labelSprite, cardTex, cardMesh, chessPiece, hullGeometry } from './landmarks.js?v=18';
 
 const $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
