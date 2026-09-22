@@ -20,7 +20,7 @@
 export const SITE = {
   name: 'Alexander Tolstyakov',
   role: 'Founder · Growth & Product',
-  tagline: 'Founder of Karteto, working across product and growth, and a sailor. This is my CV, except you sail it: work, education, places I\'ve lived, and things I do for fun.',
+  tagline: 'Founder of Karteto, working across product and growth, and a sailor. This is my corner of the internet, and you get around it by sailing: work, education, places I\'ve lived, and things I do for fun.',
   email: 'sendtoalexhere (at) gmail.com',   // deliberately written without the @, so scrapers don't pick it up
   linkedin: 'https://www.linkedin.com/in/alex-tols',
   appStore: 'https://apps.apple.com/us/app/karteto-vocabulary-flashcards/id6450647717',

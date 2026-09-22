@@ -1,7 +1,7 @@
 # alex-tols.com
 
 A personal site you explore by sailing. Steer a yacht (WASD) between archipelagos; docking at
-an island opens that part of my CV. Built with Three.js, no framework and no build step —
+an island opens that part of the site. Built with Three.js, no framework and no build step —
 it's plain files served as-is.
 
 Live at **https://alex-tols.com**
