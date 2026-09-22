@@ -1,9 +1,9 @@
 /* The engine: sea, yacht, islands, games, HUD. Text lives in content.js, island decorations in landmarks.js. */
 import * as THREE from 'three';
-import { SITE, ARCHIPELAGOS, CARDS } from './content.js?v=15';
-import { audio } from './audio.js?v=15';
-import { track, trackDwell } from './analytics.js?v=15';
-import { LANDMARKS, PLANTS, mat, put, labelSprite, cardTex, cardMesh, chessPiece, hullGeometry } from './landmarks.js?v=15';
+import { SITE, ARCHIPELAGOS, CARDS } from './content.js?v=16';
+import { audio } from './audio.js?v=16';
+import { track, trackDwell } from './analytics.js?v=16';
+import { LANDMARKS, PLANTS, mat, put, labelSprite, cardTex, cardMesh, chessPiece, hullGeometry } from './landmarks.js?v=16';
 
 const $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -536,9 +536,14 @@ addEventListener('keyup', (e) => { if (KEYMAP[e.code]) keys[KEYMAP[e.code]] = fa
 addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 
 const canvas = $('sea');
-canvas.addEventListener('pointerdown', (e) => { audio.start(); cam.dragging = true; canvas.setPointerCapture(e.pointerId); });
+let tapX = 0, tapZ = 0, tapAt = 0;
+canvas.addEventListener('pointerdown', (e) => { audio.start(); cam.dragging = true; tapX = e.clientX; tapZ = e.clientY; tapAt = performance.now(); canvas.setPointerCapture(e.pointerId); });
 canvas.addEventListener('pointermove', (e) => { if (!cam.dragging) return; cam.yaw -= e.movementX * .006; cam.pitch = clamp(cam.pitch + e.movementY * .004, .08, 1.2); cam.lastDrag = state.t; });
-const endDrag = () => { cam.dragging = false; cam.lastDrag = state.t; };
+const endDrag = (e) => {
+  // a quick tap on the sea while docked closes the panel; a drag still just moves the camera
+  if (state.docked && e && performance.now() - tapAt < 500 && Math.hypot(e.clientX - tapX, e.clientY - tapZ) < 12) castOff();
+  cam.dragging = false; cam.lastDrag = state.t;
+};
 canvas.addEventListener('pointerup', endDrag); canvas.addEventListener('pointercancel', endDrag);
 canvas.addEventListener('wheel', (e) => { cam.dist = clamp(cam.dist + e.deltaY * .02, 16, 70); e.preventDefault(); }, { passive: false });
 
@@ -649,7 +654,7 @@ function update(dt) {
   if (!s.near) s.autoOpened = null;
   else if (coarse && s.started && !s.docked && s.autoOpened !== s.near) { s.autoOpened = s.near; dock(s.near); }
   const pr = $('prompt'), show = !!s.near && !s.docked && s.started;
-  if (show) pr.innerHTML = coarse ? `Tap to dock at <b>${s.near.cfg.title}</b>` : `Press <kbd>E</kbd> to dock at <b>${s.near.cfg.title}</b>`;
+  if (show) pr.innerHTML = coarse ? `Tap to dock at <b>${s.near.cfg.title}</b>` : `Press <kbd>Enter</kbd> to dock at <b>${s.near.cfg.title}</b>`;
   pr.classList.toggle('show', show);
 
   // rig: the boom swings to leeward, further out the further off the wind we sail
