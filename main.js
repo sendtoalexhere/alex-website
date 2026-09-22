@@ -1,9 +1,9 @@
 /* The engine: sea, yacht, islands, games, HUD. Text lives in content.js, island decorations in landmarks.js. */
 import * as THREE from 'three';
-import { SITE, ARCHIPELAGOS, CARDS } from './content.js?v=16';
-import { audio } from './audio.js?v=16';
-import { track, trackDwell } from './analytics.js?v=16';
-import { LANDMARKS, PLANTS, mat, put, labelSprite, cardTex, cardMesh, chessPiece, hullGeometry } from './landmarks.js?v=16';
+import { SITE, ARCHIPELAGOS, CARDS } from './content.js?v=17';
+import { audio } from './audio.js?v=17';
+import { track, trackDwell } from './analytics.js?v=17';
+import { LANDMARKS, PLANTS, mat, put, labelSprite, cardTex, cardMesh, chessPiece, hullGeometry } from './landmarks.js?v=17';
 
 const $ = (id) => document.getElementById(id);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -537,7 +537,7 @@ addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 
 const canvas = $('sea');
 let tapX = 0, tapZ = 0, tapAt = 0;
-canvas.addEventListener('pointerdown', (e) => { audio.start(); cam.dragging = true; tapX = e.clientX; tapZ = e.clientY; tapAt = performance.now(); canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointerdown', (e) => { audio.start(); cam.dragging = true; tapX = e.clientX; tapZ = e.clientY; tapAt = performance.now(); try { canvas.setPointerCapture(e.pointerId); } catch {} });
 canvas.addEventListener('pointermove', (e) => { if (!cam.dragging) return; cam.yaw -= e.movementX * .006; cam.pitch = clamp(cam.pitch + e.movementY * .004, .08, 1.2); cam.lastDrag = state.t; });
 const endDrag = (e) => {
   // a quick tap on the sea while docked closes the panel; a drag still just moves the camera
